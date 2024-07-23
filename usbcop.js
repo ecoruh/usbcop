@@ -28,18 +28,23 @@ function copyFilesSync(source, target) {
                         const year = creationDate.getFullYear();
                         const month = String(creationDate.getMonth() + 1).padStart(2, '0');
                         const day = String(creationDate.getDate()).padStart(2, '0');
-                        const folderName = `${year}-${month}-${day}`;
-                        const folderPath = path.join(target, folderName);
+                        const yearFolder = path.join(target, `${year}`);
+                        const dateFolder = path.join(yearFolder, `${year}-${month}-${day}`);
+
+                        // Create the year-based subfolder if it doesn't exist
+                        if (!fs.existsSync(yearFolder)) {
+                            fs.mkdirSync(yearFolder, { recursive: true });
+                        }
 
                         // Create the date-based subfolder if it doesn't exist
-                        if (!fs.existsSync(folderPath)) {
-                            fs.mkdirSync(folderPath, { recursive: true });
+                        if (!fs.existsSync(dateFolder)) {
+                            fs.mkdirSync(dateFolder, { recursive: true });
                         }
 
                         // Copy the file to the date-based subfolder
-                        const targetFilePath = path.join(folderPath, file);
+                        const targetFilePath = path.join(dateFolder, file);
                         fs.copyFileSync(filePath, targetFilePath);
-                        console.log(`Copied ${file} to ${folderPath}`);
+                        console.log(`Copied ${file} to ${dateFolder}`);
                     }
                 }
             }
