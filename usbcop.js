@@ -1,8 +1,19 @@
 const fs = require('fs');
 const path = require('path');
 
-// Read configuration from config.json
-const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+// Get the configuration file name from the command-line argument or default to "config.json"
+const configFile = process.argv[2] || 'config.json';
+
+let config;
+try {
+    // Read configuration from the specified file
+    config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
+} catch (error) {
+    console.error(`Error loading configuration file: ${configFile}`);
+    console.error(error.message);
+    process.exit(1);  // Exit if the config file cannot be read or parsed
+}
+
 const sourceFolder = config.sourceFolder;
 const targetFolder = config.targetFolder;
 const folderRegex = new RegExp(config.folderRegex);
